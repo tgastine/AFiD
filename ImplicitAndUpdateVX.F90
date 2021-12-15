@@ -21,7 +21,7 @@
       real    :: alre,udx3
       real    :: amm,acc,app,dxp,dxxvx
 
-      alre=al/ren
+      alre=al
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &

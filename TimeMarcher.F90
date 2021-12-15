@@ -19,7 +19,7 @@
       integer :: ns
       integer :: j,k,i
 
-      beta=dt/ren*0.5d0
+      beta=dt*0.5d0
 
       do ns=1,nsst                                                 
 
@@ -32,12 +32,14 @@
         call ExplicitTermsVX
         call ExplicitTermsVY
         call ExplicitTermsVZ
-        call ExplicitTermsTemp     
+        if ( abs(ray) /= 0 ) call ExplicitTermsTemp     
+        if ( abs(raxi) /= 0 ) call ExplicitTermsComp
 
         call ImplicitAndUpdateVX
         call ImplicitAndUpdateVY
         call ImplicitAndUpdateVZ
-        call ImplicitAndUpdateTemp
+        if ( abs(ray) /= 0 ) call ImplicitAndUpdateTemp
+        if ( abs(raxi) /= 0 ) call ImplicitAndUpdateComp
 
         call update_halo(vy,lvlhalo)
         call update_halo(vz,lvlhalo)
@@ -69,10 +71,10 @@
         call update_halo(vy,lvlhalo)
         call update_halo(vz,lvlhalo)
         call update_halo(pr,lvlhalo)
-        call update_halo(temp,lvlhalo)
+        if ( abs(ray) /= 0 ) call update_halo(temp,lvlhalo)
+        if ( abs(raxi) /= 0 ) call update_halo(xi,lvlhalo)
 
         enddo
-
 
       return                                                            
       end                                                               

@@ -25,6 +25,8 @@
         read(15,301) dummy
         read(15,*) ray,pra,dt,resid,limitCFL
         read(15,301) dummy
+        read(15,*) raxi,sc
+        read(15,301) dummy
         read(15,*) flagstat,flagbal,tsta,starea
         read(15,301) dummy
         read(15,*) inslws,inslwn
@@ -43,8 +45,11 @@
 !
 !     DEFINITIONS FOR THE NATURAL CONVECTION
 !
-      ren = dsqrt(ray/pra)
-      pec = dsqrt(pra*ray)
+      BuoFac = ray/pra
+      ChemFac = raxi/sc
+      opr = 1.0d0/pra
+      osc = 1.0d0/sc
+
       pi=2.d0*dasin(1.d0)                          
 !                                                                       
 !

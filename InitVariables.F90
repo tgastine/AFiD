@@ -67,6 +67,13 @@
       call AllocateReal2DArray(temptp,1,ny,1,nz)
 
 !-------------------------------------------------
+! Arrays for chemical comp boundary conditions    
+!-------------------------------------------------
+
+      call AllocateReal2DArray(xibp,1,ny,1,nz)
+      call AllocateReal2DArray(xitp,1,ny,1,nz)
+
+!-------------------------------------------------
 ! Arrays for statistics    
 !-------------------------------------------------
 
@@ -83,9 +90,14 @@
        call AllocateReal1DArray(temp_rms,1,nxm)
        call AllocateReal1DArray(tempvx_me,1,nxm)
 
+       call AllocateReal1DArray(xi_me,1,nxm)
+       call AllocateReal1DArray(xi_rms,1,nxm)
+       call AllocateReal1DArray(xivx_me,1,nxm)
+
        if (disscal) then
         call AllocateReal1DArray(disste,1,nxm)
         call AllocateReal1DArray(dissth,1,nxm)
+        call AllocateReal1DArray(dissxi,1,nxm)
        end if
       end if
 
@@ -97,6 +109,7 @@
       call AllocateReal3DArray(vx,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
       call AllocateReal3DArray(pr,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
       call AllocateReal3DArray(temp,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
+      call AllocateReal3DArray(xi,1,nx,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
       call AllocateReal3DArray(dphhalo,1,nxm,xstart(2)-lvlhalo,xend(2)+lvlhalo,xstart(3)-lvlhalo,xend(3)+lvlhalo)
 
       !-----------------------------------------------
@@ -110,7 +123,9 @@
       call AllocateReal3DArray(ruy,1,nx,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(ruz,1,nx,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(hro,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(xiro,1,nx,xstart(2),xend(2),xstart(3),xend(3))
       call AllocateReal3DArray(rutemp,1,nx,xstart(2),xend(2),xstart(3),xend(3))
+      call AllocateReal3DArray(ruxi,1,nx,xstart(2),xend(2),xstart(3),xend(3))
 
       return 
       end   

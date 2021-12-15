@@ -13,6 +13,7 @@
         integer   :: istr3
         real      :: ylen,zlen
         real      :: ray,pra,dt,resid
+        real      :: raxi,sc
         integer   :: inslws,inslwn
         integer   :: starea,tsta
         real      :: dtmin,dtmax,limitCFL,limitVel
@@ -48,18 +49,20 @@
 !===========================================================
 !******* Other variables ***********************************
         integer  :: nxm, nym, nzm
-        real :: ren, pec
+        real :: opr, osc, BuoFac, ChemFac
         real :: pi
         real :: al,ga,ro
         real :: beta
         real :: qqmax,qqtot
         real :: re
         real :: tempmax,tempmin,tempm
+        real :: ximax,ximin,xim
         integer :: ntime
         integer, parameter:: ndv=3
         real, dimension(1:ndv) :: vmax
         real, dimension(1:3) :: gam,rom,alm
         real, allocatable, dimension(:,:) :: tempbp,temptp
+        real, allocatable, dimension(:,:) :: xibp,xitp
               
         logical :: dumpslabs=.false.
         logical :: statcal=.false.
@@ -81,9 +84,9 @@
       use param
         implicit none
         real,allocatable,dimension(:,:,:) :: vx,vy,vz
-        real,allocatable,dimension(:,:,:) :: pr,temp,rhs
-        real,allocatable,dimension(:,:,:) :: rux,ruy,ruz,rutemp
-        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo
+        real,allocatable,dimension(:,:,:) :: pr,temp,rhs,xi
+        real,allocatable,dimension(:,:,:) :: rux,ruy,ruz,rutemp,ruxi
+        real,allocatable,dimension(:,:,:) :: dph,qcap,dq,hro,dphhalo,xiro
       end module local_arrays
 
 !===============================================================
@@ -92,7 +95,8 @@
        real,allocatable, dimension(:) :: vz_me,vz_rms 
        real,allocatable, dimension(:) :: vy_me,vx_me,vy_rms,vx_rms 
        real,allocatable, dimension(:) :: temp_me,temp_rms 
-       real, allocatable,dimension(:) :: disste,dissth,tempvx_me
+       real,allocatable, dimension(:) :: xi_me,xi_rms 
+       real, allocatable,dimension(:) :: disste,dissth,tempvx_me,xivx_me,dissxi
        integer :: nstatsamples
       end module stat_arrays
 !=====================================================       

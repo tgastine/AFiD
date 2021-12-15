@@ -1,16 +1,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: SolveImpEqnUpdate_Temp.F90                     !
-!    CONTAINS: subroutine SolveImpEqnUpdate_Temp          !
+!    FILE: SolveImpEqnUpdate_Comp.F90                     !
+!    CONTAINS: subroutine SolveImpEqnUpdate_Comp          !
 !                                                         ! 
 !    PURPOSE: Inverts the implicit equation for           !
-!     temperature, and updates it to time t+dt            !
+!     composition, and updates it to time t+dt            !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine SolveImpEqnUpdate_Temp
+      subroutine SolveImpEqnUpdate_Comp
       use param
-      use local_arrays, only : temp,rhs
+      use local_arrays, only : xi,rhs
       use decomp_2d, only: xstart,xend
       implicit none
       real, dimension(nx) :: amkl,apkl,ackl
@@ -22,7 +22,7 @@
 !     The coefficients are normalized to prevent floating
 !     point errors.
 
-      betadx=0.5d0*al*dt*opr
+      betadx=0.5d0*al*dt*osc
 
       amkl(1)=0.d0
       apkl(1)=0.d0
@@ -61,7 +61,7 @@
        do ic=xstart(3),xend(3)
          do jc=xstart(2),xend(2)
             do kc=2,nxm
-              temp(kc,jc,ic)=temp(kc,jc,ic) + rhs(kc,jc,ic)
+              xi(kc,jc,ic)=xi(kc,jc,ic) + rhs(kc,jc,ic)
              end do
           end do
       end do

@@ -1,7 +1,7 @@
       program AFiD
       use mpih
       use param
-      use local_arrays, only: vx,vy,vz,temp,pr
+      use local_arrays, only: vx,vy,vz,temp,pr,xi
       use hdf5
       use decomp_2d
       use decomp_2d_fft
@@ -63,6 +63,8 @@
   142 format(//,8x,'Periodic lateral wall boundary condition')
       write(6,202) ray,pra
   202 format(/,5x,'Parameters: ',' Ra=',e10.3,' Pr= ',e10.3)
+      write(6,203) raxi,sc
+  203 format(/,5x,'Parameters: ',' Raxi=',e10.3,' Sc= ',e10.3)
       if(variabletstep) then
          write(6,204) limitCFL
   204 format(/,5x,'Variable dt and fixed cfl= ', &
@@ -104,6 +106,7 @@
 
       call InitPressureSolver
       call SetTempBCs
+      call SetCompBCs
 
       if(readflow) then
 
@@ -128,6 +131,7 @@
       call update_halo(vy,lvlhalo)
       call update_halo(vz,lvlhalo)
       call update_halo(temp,lvlhalo)
+      call update_halo(xi,lvlhalo)
       call update_halo(pr,lvlhalo)
 
 !EP   Check divergence. Should be reduced to machine precision after the first

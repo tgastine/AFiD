@@ -23,7 +23,7 @@
       real    :: dyp,dxxvy
 
 
-      alre=al/ren
+      alre=al
       udy=dy*al
 
 !$OMP  PARALLEL DO &

@@ -11,7 +11,7 @@
 
       subroutine CalcStats
       use param
-      use local_arrays, only: vz,vy,vx,temp
+      use local_arrays, only: vz,vy,vx,temp,xi
       use decomp_2d, only: xstart,xend
       use stat_arrays
       use mpih
@@ -31,6 +31,7 @@
                vy_me(k) = vy_me(k) + vy(k,j,i)*usnzm*usnym
                vz_me(k) = vz_me(k) + vz(k,j,i)*usnzm*usnym
                temp_me(k) = temp_me(k) + temp(k,j,i)*usnzm*usnym
+               xi_me(k) = xi_me(k) + xi(k,j,i)*usnzm*usnym
                vx_rms(k) = vx_rms(k) + vx(k,j,i)**2*usnzm*usnym
                vy_rms(k) = vy_rms(k) + vy(k,j,i)**2*usnzm*usnym
                vz_rms(k) = vz_rms(k) + vz(k,j,i)**2*usnzm*usnym
@@ -38,6 +39,8 @@
      &                               temp(k,j,i)**2*usnzm*usnym
                tempvx_me(k) = tempvx_me(k) +  &
      &                         temp(k,j,i)*vx(k,j,i)*usnzm*usnym
+               xi_rms(k) = xi_rms(k) + xi(k,j,i)**2*usnzm*usnym
+               xivx_me(k) = xivx_me(k) + xi(k,j,i)*vx(k,j,i)*usnzm*usnym
             end do
          end do
       end do
@@ -60,14 +63,18 @@
       character*30 dsetname_vyme
       character*30 dsetname_vzme
       character*30 dsetname_tempme
+      character*30 dsetname_xime
 
       character*30 dsetname_vxrms
       character*30 dsetname_vyrms
       character*30 dsetname_vzrms
       character*30 dsetname_temprms
+      character*30 dsetname_xirms
 
       character*30 dsetname_tempvxme
+      character*30 dsetname_xivxme
       character*30 dsetname_dissth
+      character*30 dsetname_dissxi
       character*30 dsetname_disste
       character*30 filnam,dsetname
       logical :: fexist
@@ -78,14 +85,18 @@
       dsetname_vyme = trim('vy_mean')
       dsetname_vzme = trim('vz_mean')
       dsetname_tempme = trim('temp_mean')
+      dsetname_xime = trim('xi_mean')
 
       dsetname_vxrms = trim('vx_rms')
       dsetname_vyrms = trim('vy_rms')
       dsetname_vzrms = trim('vz_rms')
       dsetname_temprms = trim('temp_rms')
+      dsetname_xirms = trim('xi_rms')
 
       dsetname_tempvxme = trim('tempvx_mean')
+      dsetname_xivxme = trim('xivx_mean')
       dsetname_dissth = trim('dissth')
+      dsetname_dissxi = trim('dissxi')
       dsetname_disste = trim('disste')
 
       dsetname = trim('averaging_time')
@@ -111,16 +122,20 @@
       call StatReadReduceWrite(vy_me,filnam,dsetname_vyme)
       call StatReadReduceWrite(vz_me,filnam,dsetname_vzme)
       call StatReadReduceWrite(temp_me,filnam,dsetname_tempme)
+      call StatReadReduceWrite(xi_me,filnam,dsetname_xime)
 
       call StatReadReduceWrite(vx_rms,filnam,dsetname_vxrms)
       call StatReadReduceWrite(vy_rms,filnam,dsetname_vyrms)
       call StatReadReduceWrite(vz_rms,filnam,dsetname_vzrms)
       call StatReadReduceWrite(temp_rms,filnam,dsetname_temprms)
+      call StatReadReduceWrite(xi_rms,filnam,dsetname_xirms)
  
       call StatReadReduceWrite(tempvx_me,filnam,dsetname_tempvxme)
+      call StatReadReduceWrite(xivx_me,filnam,dsetname_xivxme)
 
       if(disscal) then 
        call StatReadReduceWrite(dissth,filnam,dsetname_dissth)
+       call StatReadReduceWrite(dissxi,filnam,dsetname_dissxi)
        call StatReadReduceWrite(disste,filnam,dsetname_disste)
       end if
 
@@ -136,6 +151,12 @@
 
        dsetname = trim('Prandtl Number')
        call HdfSerialWriteRealScalar(dsetname,filnam,pra)
+
+       dsetname = trim('Rayleigh (comp) Number')
+       call HdfSerialWriteRealScalar(dsetname,filnam,raxi)
+
+       dsetname = trim('Schmidt Number')
+       call HdfSerialWriteRealScalar(dsetname,filnam,sc)
 
 
       endif

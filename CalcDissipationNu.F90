@@ -43,7 +43,7 @@
 !$OMP  PARALLEL DO &
 !$OMP  DEFAULT(none) &
 !$OMP  SHARED(xstart,xend,vz,vy,vx,temp) &
-!$OMP  SHARED(nxm,ren,pec,pra) &
+!$OMP  SHARED(nxm,pra) &
 !$OMP  SHARED(dxc,dxm,lec,lem) &
 !$OMP  SHARED(disste,dissth) &
 !$OMP  PRIVATE(i,j,k,ip,jp,kp) &
@@ -79,7 +79,7 @@
        dissipte  = (hxx*hxx+hxy*hxy+hxz*hxz) 
        dissipte2 = (hyx*hyx+hyy*hyy+hyz*hyz)+(hzx*hzx+hzy*hzy+hzz*hzz)
 
-       nu_mu = nu_mu + dissipte*lem(k)*pra+dissipte2*lec(k)*pra 
+       nu_mu = nu_mu + dissipte*lem(k)*pra**2/ray+dissipte2*lec(k)*pra**2/ray
 
 !      Thermal gradient dissipation rate
 !                       1  |         | 2
@@ -94,8 +94,8 @@
        nu_th = nu_th+dissipth*lem(k)
 
 !$OMP CRITICAL
-       disste(k) =  disste(k) + (dissipte + dissipte2) / (ren*real(nym)*real(nzm))
-       dissth(k) =  dissth(k) + dissipth               / (pec*real(nym)*real(nzm))
+       disste(k) =  disste(k) + (dissipte + dissipte2) / (real(nym)*real(nzm))
+       dissth(k) =  dissth(k) + opr*dissipth/(real(nym)*real(nzm))
 !$OMP END CRITICAL
 
        end do

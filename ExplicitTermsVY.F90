@@ -20,8 +20,8 @@
       real    :: dyyvy, dzzvy
 
 
-      udyq=dyq/ren
-      udzq=dzq/ren
+      udyq=dyq
+      udzq=dzq
 
       udy=dy*0.25
       udz=dz*0.25

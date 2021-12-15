@@ -57,6 +57,9 @@
       call DestroyReal2DArray(tempbp)
       call DestroyReal2DArray(temptp)
 
+      call DestroyReal2DArray(xibp)
+      call DestroyReal2DArray(xitp)
+
       call DestroyReal1DArray(vx_me)
       call DestroyReal1DArray(vy_me)
       call DestroyReal1DArray(vz_me)
@@ -69,10 +72,15 @@
       call DestroyReal1DArray(temp_rms)
       call DestroyReal1DArray(tempvx_me)
 
+      call DestroyReal1DArray(xi_me)
+      call DestroyReal1DArray(xi_rms)
+      call DestroyReal1DArray(xivx_me)
+
       call DestroyReal3DArray(vx)
       call DestroyReal3DArray(vy)
       call DestroyReal3DArray(vz)
       call DestroyReal3DArray(temp)
+      call DestroyReal3DArray(xi)
 
       call DestroyReal3DArray(pr)
       call DestroyReal3DArray(rhs)
@@ -84,6 +92,7 @@
       call DestroyReal3DArray(ruy)
       call DestroyReal3DArray(ruz)
       call DestroyReal3DArray(rutemp)
+      call DestroyReal3DArray(ruxi)
 
       return 
       end   

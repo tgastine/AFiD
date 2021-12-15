@@ -23,3 +23,17 @@
       return
       end
 !
+      subroutine SetCompBCs
+      use param
+      implicit none
+      integer :: ic,jc
+
+      do ic=1,nzm
+       do jc=1,nym
+        xitp(jc,ic)=0.d0
+        xibp(jc,ic)=1.d0
+       enddo
+      enddo
+
+      return
+      end

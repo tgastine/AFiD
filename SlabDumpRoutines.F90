@@ -11,13 +11,13 @@
 
       subroutine SlabDumper
       use param
-      use local_arrays, only: temp,vx,vy,vz
+      use local_arrays, only: temp,vx,vy,vz,xi
       use stat3_param
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: i,j,m
       real,dimension(xstart(2):xend(2),xstart(3):xend(3)) :: &
-     &      vxcc,vycc,vzcc,tempcc
+     &      vxcc,vycc,vzcc,tempcc,xicc
       character*70 :: filnam
       character*1 :: charm
 
@@ -33,6 +33,7 @@
            vycc(j,i) = vy(kslab(m),j,i)
            vzcc(j,i) = vz(kslab(m),j,i)
            tempcc(j,i) = temp(kslab(m),j,i)
+           xicc(j,i) = xi(kslab(m),j,i)
           enddo
          enddo
 !$OMP  END PARALLEL DO
@@ -46,6 +47,8 @@
       call DumpSingleSlab(vzcc,filnam)
       filnam='slab'//charm//'temp_'
       call DumpSingleSlab(tempcc,filnam)
+      filnam='slab'//charm//'xi_'
+      call DumpSingleSlab(xicc,filnam)
       enddo
 
       return

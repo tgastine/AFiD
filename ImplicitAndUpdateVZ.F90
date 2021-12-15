@@ -21,7 +21,7 @@
       real    :: alre,amm,acc,app,udz
       real    :: dxxvz,dzp
 
-      alre=al/ren
+      alre=al
       udz=dz*al
 
 !$OMP  PARALLEL DO &

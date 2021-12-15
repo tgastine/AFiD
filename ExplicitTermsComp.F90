@@ -1,16 +1,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
-!    FILE: ExplicitTermsTemp.F90                          !
+!    FILE: ExplicitTermsComp.F90                          !
 !    CONTAINS: subroutine ExplicitTermsTemp               !
 !                                                         ! 
 !    PURPOSE: Compute the non-linear terms associated to  !
-!     the temperature.                                    !
+!     the chemical composition.                           !
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine ExplicitTermsTemp
+      subroutine ExplicitTermsComp
       use param
-      use local_arrays, only: vy,vx,temp,vz,hro
+      use local_arrays, only: vy,vx,xi,vz,xiro
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc,ic
@@ -21,14 +21,14 @@
 
       udz=dz*0.25
       udy=dy*0.25
-      udzq=dzq*opr
-      udyq=dyq*opr
+      udzq=dzq*osc
+      udyq=dyq*osc
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,vz,vy,vx,nxm) &
 !$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udz) &
-!$OMP   SHARED(udy,udzq,udyq,udx3c,temp,hro) &
+!$OMP   SHARED(udy,udzq,udyq,udx3c,xi,xiro) &
 !$OMP   PRIVATE(ic,jc,kc,im,ip,km,kp,jm,jp) &
 !$OMP   PRIVATE(htx,hty,htz,dyyt,dzzt)
       do ic=xstart(3),xend(3)
@@ -49,8 +49,8 @@
 !             -----------
 !                d   z      
 !
-      htz=((vz(km,jc,ip)+vz(kc,jc,ip))*(temp(kc,jc,ip)+temp(kc,jc,ic))- &
-           (vz(km,jc,ic)+vz(kc,jc,ic))*(temp(kc,jc,ic)+temp(kc,jc,im)) &
+      htz=((vz(km,jc,ip)+vz(kc,jc,ip))*(xi(kc,jc,ip)+xi(kc,jc,ic))- &
+           (vz(km,jc,ic)+vz(kc,jc,ic))*(xi(kc,jc,ic)+xi(kc,jc,im)) &
           )*udz
 !
 !
@@ -61,8 +61,8 @@
 !             -----------
 !                d   y      
 !
-      hty=((vy(kc,jp,ic)+vy(km,jp,ic))*(temp(kc,jp,ic)+temp(kc,jc,ic))- &
-           (vy(kc,jc,ic)+vy(km,jc,ic))*(temp(kc,jc,ic)+temp(kc,jm,ic)) &
+      hty=((vy(kc,jp,ic)+vy(km,jp,ic))*(xi(kc,jp,ic)+xi(kc,jc,ic))- &
+           (vy(kc,jc,ic)+vy(km,jc,ic))*(xi(kc,jc,ic)+xi(kc,jm,ic)) &
           )*udy
 !
 !    rho vx term
@@ -72,25 +72,25 @@
 !                -----------
 !                 d   x      
 !
-      htx=((vx(kp,jc,ic)+vx(kc,jc,ic))*(temp(kp,jc,ic)+temp(kc,jc,ic))- &
-           (vx(kc,jc,ic)+vx(km,jc,ic))*(temp(kc,jc,ic)+temp(km,jc,ic)) &
+      htx=((vx(kp,jc,ic)+vx(kc,jc,ic))*(xi(kp,jc,ic)+xi(kc,jc,ic))- &
+           (vx(kc,jc,ic)+vx(km,jc,ic))*(xi(kc,jc,ic)+xi(km,jc,ic)) &
           )*udx3c(kc)*0.25d0
 !
 !
-!   zz second derivatives of temp
+!   zz second derivatives of xi
 !
-            dzzt=(temp(kc,jc,ip) &
-             -2.0*temp(kc,jc,ic) &
-                 +temp(kc,jc,im))*udzq
+            dzzt=(xi(kc,jc,ip) &
+             -2.0*xi(kc,jc,ic) &
+                 +xi(kc,jc,im))*udzq
       
 !
-!   yy second derivatives of temp
+!   yy second derivatives of xi
 !
-            dyyt=(temp(kc,jp,ic) &
-             -2.0*temp(kc,jc,ic) &
-                 +temp(kc,jm,ic))*udyq
+            dyyt=(xi(kc,jp,ic) &
+             -2.0*xi(kc,jc,ic) &
+                 +xi(kc,jm,ic))*udyq
 !
-            hro(kc,jc,ic) = -(htx+hty+htz)+dyyt+dzzt
+            xiro(kc,jc,ic) = -(htx+hty+htz)+dyyt+dzzt
       enddo
       enddo
       enddo

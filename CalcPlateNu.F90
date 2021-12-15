@@ -10,7 +10,7 @@
 
       subroutine CalcPlateNu
       use param
-      use local_arrays, only: temp
+      use local_arrays, only: temp, xi
       use mpih
       use decomp_2d, only: xstart,xend
       implicit none
@@ -48,8 +48,37 @@
       if(ismaster) then
        open(97,file="nu_plate.out",status='unknown', &
         access='sequential',position='append')
-       write(97,546) time, nuslow, nusupp
- 546   format(4(1x,e14.6))
+       write(97,'(es20.12,2es16.8)') time, nuslow, nusupp
+       close(97)
+      endif
+
+      nuslow = 0.d0
+      nusupp = 0.d0
+!$OMP  PARALLEL DO &
+!$OMP   DEFAULT(none) &
+!$OMP   SHARED(xstart,xend,xi,del,deln) &
+!$OMP   SHARED(nxm,nx) &
+!$OMP   PRIVATE(i,j) &
+!$OMP   REDUCTION(+:nuslow) &
+!$OMP   REDUCTION(+:nusupp)
+      do i=xstart(3),xend(3)
+         do j=xstart(2),xend(2)
+           nuslow = nuslow + (xi(1,j,i)-xi(2,j,i))*del
+           nusupp = nusupp + (xi(nxm,j,i)-xi(nx,j,i))*deln
+        enddo
+      end do
+!$OMP END PARALLEL DO
+
+      nuslow = nuslow / (nzm*nym)
+      nusupp = nusupp / (nzm*nym)
+
+      call MpiSumRealScalar(nuslow)
+      call MpiSumRealScalar(nusupp)
+
+      if(ismaster) then
+       open(97,file="sh_plate.out",status='unknown', &
+        access='sequential',position='append')
+       write(97,'(es20.12,2es16.8)') time, nuslow, nusupp
        close(97)
       endif
 

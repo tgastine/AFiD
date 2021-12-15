@@ -10,12 +10,14 @@
 
       subroutine WriteFlowField
       use param
-      use local_arrays, only: vz,vy,vx,temp
+      use local_arrays, only: vz,vy,vx,temp,xi
       implicit none
       character*30 :: filnam1,dsetname
 
       filnam1 = trim('continua_temp.h5')
       call HdfWriteRealHalo3D(filnam1,temp)
+      filnam1 = trim('continua_comp.h5')
+      call HdfWriteRealHalo3D(filnam1,xi)
       filnam1 = trim('continua_vx.h5')
       call HdfWriteRealHalo3D(filnam1,vx)
       filnam1 = trim('continua_vy.h5')

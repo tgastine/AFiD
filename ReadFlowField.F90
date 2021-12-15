@@ -19,10 +19,10 @@
       integer :: nzom,nyom,nxo,nyo,nzo
       integer :: xs2og,xe2og,xs3og,xe3og
       integer :: istro3
-      integer :: vxflag,vyflag,vzflag,teflag
+      integer :: vxflag,vyflag,vzflag,teflag,xieflag
 !     integer (kind=MPI_ADDRESS_KIND) :: extent,lb
       real :: stro3
-      real, allocatable, dimension(:,:,:) :: tempold,vyold,vxold,vzold
+      real, allocatable, dimension(:,:,:) :: xiold,tempold,vyold,vxold,vzold
       logical :: fexist
       
 !EP   Reading old grid information by master
@@ -62,6 +62,7 @@
       vyflag = 2
       vzflag = 3
       teflag = 4
+      xieflag = 5
       
 !EP   Check whether grid specifications have been updated
       if(nyo.ne.ny.or.nxo.ne.nx.or.nzo.ne.nz &
@@ -156,6 +157,19 @@
 
       deallocate(tempold)
 
+!EP   xi
+      allocate(xiold(0:nxo+1,xs2og-lvlhalo:xe2og+lvlhalo, &
+     & xs3og-lvlhalo:xe3og+lvlhalo))
+      
+      call HdfReadContinua(nzo,nyo,nxo,xs2og,xe2og, &
+       xs3og,xe3og,xieflag,xiold(1:nxo,xs2og-lvlhalo:xe2og+lvlhalo, &
+       xs3og-lvlhalo:xe3og+lvlhalo))
+
+      call interp(xiold,xi(1:nx,xstart(2):xend(2),xstart(3):xend(3)) &
+       ,nzo,nyo,nxo,istro3,stro3,xieflag,xs2og,xe2og,xs3og,xe3og)
+
+      deallocate(xiold)
+
 
       else
 
@@ -168,6 +182,8 @@
      & ,xstart(3),xend(3),vxflag,vx)
       call HdfReadContinua(nz,ny,nx,xstart(2),xend(2) &
      & ,xstart(3),xend(3),teflag,temp)
+      call HdfReadContinua(nz,ny,nx,xstart(2),xend(2) &
+     & ,xstart(3),xend(3),xieflag,xi)
 
       endif
 

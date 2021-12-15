@@ -10,7 +10,7 @@
 
       subroutine ExplicitTermsVX
       use param
-      use local_arrays, only: vz,vy,vx,temp,qcap
+      use local_arrays, only: vz,vy,vx,temp,qcap,xi
       use decomp_2d, only: xstart,xend
       implicit none
       integer :: jc,kc
@@ -23,14 +23,14 @@
       udy=dy*0.25
       udz=dz*0.25
 
-      udyq=dyq/ren
-      udzq=dzq/ren
+      udyq=dyq
+      udzq=dzq
 
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &
 !$OMP   SHARED(xstart,xend,nxm,vz,vy,vx,dz,dy) &
-!$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udz) &
-!$OMP   SHARED(udy,udzq,udyq,udx3c,qcap,temp) &
+!$OMP   SHARED(kmv,kpv,am3sk,ac3sk,ap3sk,udz,ChemFac) &
+!$OMP   SHARED(udy,udzq,udyq,udx3c,qcap,temp,xi,BuoFac) &
 !$OMP   PRIVATE(ic,jc,kc,imm,ipp,km,kp) &
 !$OMP   PRIVATE(jmm,jpp,tempit) &
 !$OMP   PRIVATE(hxx,hxy,hxz,dzzvx,dyyvx)
@@ -82,7 +82,7 @@
 !
 !  add the buoyancy term
 !
-          tempit=temp(kc,jc,ic)
+          tempit=BuoFac*temp(kc,jc,ic)+ChemFac*xi(kc,jc,ic)
 
 !
 !   z second derivatives of vx
