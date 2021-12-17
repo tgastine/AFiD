@@ -31,6 +31,7 @@
            yyy=xc(k)          
            xxx=ym(j)
            vx(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
+           vz(k,j,i)=cos(2.7*xxx)*cos(4.3*zc(i))*eps
 
          enddo
         enddo

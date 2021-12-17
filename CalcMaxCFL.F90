@@ -18,7 +18,7 @@
       integer :: j,k,jp,kp,i,ip
       real :: qcf
       
-      cflm=0.00000001d0
+      cflm=1.0d-14
 !                                                                       
 !$OMP  PARALLEL DO &
 !$OMP   DEFAULT(none) &

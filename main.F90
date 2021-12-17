@@ -175,21 +175,21 @@
         call CalcMaxCFL(instCFL)
 
         if(variabletstep) then
-          if(ntime.gt.1) then
-            if(instCFL.lt.1.0d-8) then !EP prevent fp-overflow
+          if(ntime>1) then
+            if(instCFL<1.0d-14) then !EP prevent fp-overflow
               dt=dtmax
             else
               dt=limitCFL/instCFL
             endif
-            if(dt.gt.dtmax) dt=dtmax
+            if(dt>dtmax) dt=dtmax
           else
             dt=dtmin
           endif
-            if(dt.lt.dtmin) errorcode = 166
+            if(dt<dtmin) errorcode = 166
         else  
 !RO    fixed time-step
           instCFL=instCFL*dt
-          if(instCFL.gt.limitCFL) errorcode = 165
+          if(instCFL>limitCFL) errorcode = 165
         endif
 
         call TimeMarcher
@@ -203,9 +203,9 @@
 
         time=time+dt
 
-        if(ntime.eq.1.or.mod(time,tout).lt.dt) then
+        if(ntime==1.or.mod(time,tout)<dt) then
           call GlobalQuantities
-          if(vmax(1).gt.limitVel.and.vmax(2).gt.limitVel) errorcode = 266
+          if(vmax(1)>limitVel.and.vmax(2)>limitVel) errorcode = 266
 
             call CalcMaxCFL(instCFL)
             call CheckDivergence(dmax)
