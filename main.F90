@@ -22,7 +22,7 @@
 !
       call ReadInputFile
 
-      if (command_argument_count().eq.2) then
+      if (command_argument_count()==2) then
         call get_command_argument(1,arg)
         read(arg,'(i10)') prow
         call get_command_argument(2,arg)
@@ -39,7 +39,7 @@
 
       call HdfStart
 
-      if (nrank.eq.master) ismaster = .true.
+      if (nrank==master) ismaster = .true.
 
       if (ismaster) write(6,*) 'MPI tasks=', nproc
 

@@ -66,13 +66,13 @@
       
 !EP   Check whether grid specifications have been updated
       if(nyo.ne.ny.or.nxo.ne.nx.or.nzo.ne.nz &
-       .or.istro3.ne.istr3.or.(abs(stro3-str3).gt.1e-8)) then
+       .or.istro3.ne.istr3.or.(abs(stro3-str3)>1e-8)) then
 
        if(ismaster) write(*,*) "Interpolating new grid"
 
 !RO    Using more than double the amount of points results in crashes
 
-       if(nz.gt.nzo*2.or.ny.gt.nyo*2.or.nx.gt.nxo*2) then
+       if(nz>nzo*2.or.ny>nyo*2.or.nx>nxo*2) then
 
         if(ismaster) then 
           write(*,*) "New grid resolution cannot be more ",&

@@ -13,7 +13,7 @@
       implicit none
       integer ns
 
-      if(nsst.gt.1) then   
+      if(nsst>1) then   
         gam(1)=8.d0/15.d0
         gam(2)=5.d0/12.d0
         gam(3)=3.d0/4.d0

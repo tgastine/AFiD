@@ -27,8 +27,8 @@
       do kc=1,nxm
         kmv(kc)=kc-1
         kpv(kc)=kc+1
-        if(kc.eq.1) kmv(kc)=kc
-        if(kc.eq.nxm) kpv(kc)=kc
+        if(kc==1) kmv(kc)=kc
+        if(kc==nxm) kpv(kc)=kc
       end do
 
       do kc=1,nxm
@@ -66,7 +66,7 @@
       call AllocateReal1DArray(etaz,1,nx+500)
       call AllocateReal1DArray(etazm,1,nx+500)
 
-      if (istr3.eq.0) then
+      if (istr3==0) then
         do kc=1,nx
           x3=real(kc-1)/real(nxm)
           etaz(kc)=alx3*x3
@@ -80,12 +80,12 @@
 
         tstr3=tanh(str3)
 
-        if (istr3.eq.4) then
+        if (istr3==4) then
          xc(1)=0.0d0
          do kc=2,nx
           z2dp=float(2*kc-nx-1)/float(nxm)
           xc(kc)=(1+tanh(str3*z2dp)/tstr3)*0.5*alx3
-          if(xc(kc).lt.0.or.xc(kc).gt.alx3)then
+          if(xc(kc)<0.or.xc(kc)>alx3)then
            write(*,*)'Grid is too streched: ','zc(',kc,')=',xc(kc)
            stop
           endif
@@ -97,7 +97,7 @@
 !
 
 
-      if(istr3.eq.6) then
+      if(istr3==6) then
       nclip = int(str3)
       nxmo = nx+nclip+nclip
       do kc=1,nxmo

@@ -54,7 +54,7 @@
 !                                                                       
 !
       if(flagstat.ne.0) statcal = .true.
-      if(idtv.eq.0) variabletstep = .false.
+      if(idtv==0) variabletstep = .false.
       if(flagbal.ne.0) disscal = .true.
       if(nread.ne.0) readflow = .true.
       if(ireset.ne.0) resetlogstime = .true.

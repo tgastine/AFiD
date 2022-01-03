@@ -260,14 +260,14 @@
       integer,intent(in) :: n,istr
       integer :: i,nxmo,nclip
 
-      if (istr.eq.0) then
+      if (istr==0) then
         do i=1,n
           x3=real(i-1)/real(n-1)
           rc(i)=rext*x3
         enddo
        endif
 
-      if(istr.eq.6) then
+      if(istr==6) then
       pi=2.0d0*asin(1.0d0)
       nclip = int(str)
       nxmo = n+nclip+nclip

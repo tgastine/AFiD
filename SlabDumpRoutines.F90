@@ -79,7 +79,7 @@
         do k=2,nxm
           xmloc=xm(k)
           do j=2,9
-            if(xm(k).gt.xslab(j).and.xm(k-1).lt.xslab(j)) then
+            if(xm(k)>xslab(j).and.xm(k-1)<xslab(j)) then
              kslab(j) = k
             endif
           enddo

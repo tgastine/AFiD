@@ -15,7 +15,13 @@
       use local_arrays
       use mpih
       use decomp_2d
+      use explicit
+      use UpdateTemp
+      use UpdateComp
+      use UpdateVel
+
       implicit none
+
       integer :: ns
       integer :: j,k,i
 
@@ -29,17 +35,17 @@
         ga=gam(ns)
         ro=rom(ns)
 
-        call ExplicitTermsVX
-        call ExplicitTermsVY
-        call ExplicitTermsVZ
-        if ( abs(ray) /= 0 ) call ExplicitTermsTemp     
-        if ( abs(raxi) /= 0 ) call ExplicitTermsComp
+        call ExplicitTermsVX()
+        call ExplicitTermsVY()
+        call ExplicitTermsVZ()
+        if ( abs(ray) /= 0 ) call ExplicitTermsTemp()
+        if ( abs(raxi) /= 0 ) call ExplicitTermsComp()
 
-        call ImplicitAndUpdateVX
-        call ImplicitAndUpdateVY
-        call ImplicitAndUpdateVZ
-        if ( abs(ray) /= 0 ) call ImplicitAndUpdateTemp
-        if ( abs(raxi) /= 0 ) call ImplicitAndUpdateComp
+        call ImplicitAndUpdateVX()
+        call ImplicitAndUpdateVY()
+        call ImplicitAndUpdateVZ()
+        if ( abs(ray) /= 0 ) call ImplicitAndUpdateTemp()
+        if ( abs(raxi) /= 0 ) call ImplicitAndUpdateComp()
 
         call update_halo(vy,lvlhalo)
         call update_halo(vz,lvlhalo)

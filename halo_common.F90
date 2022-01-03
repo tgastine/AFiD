@@ -109,7 +109,7 @@
      endif
 
 #ifdef HALO_DEBUG       
-          if(nrank.eq.0) write(*,*) 'HALO COMPARISON'
+          if(nrank==0) write(*,*) 'HALO COMPARISON'
           ys = 1 + level
           ye = size(in,2) - level
           zs = 1 + level
