@@ -194,7 +194,7 @@
 
         call TimeMarcher
 
-        if(mod(time,tout).lt.dt) then
+        if(mod(time,tout)<dt) then
          if(ismaster) then
           write(6,*) ' ---------------------------------------- '
           write(6,*) ' T = ',time,' NTIME = ',ntime,' DT = ',dt
@@ -211,7 +211,7 @@
             call CheckDivergence(dmax)
             call CalcPlateNu
 
-            if(time.gt.tsta) then
+            if(time>tsta) then
 
              if (statcal)  call CalcStats
              if (dumpslabs) call SlabDumper
@@ -221,15 +221,15 @@
 
             if(.not.variabletstep) instCFL=instCFL*dt
 
-            if(abs(dmax).gt.resid) errorcode = 169
+            if(abs(dmax)>resid) errorcode = 169
 
         endif
 
-        if(time.gt.tmax) errorcode = 333
+        if(time>tmax) errorcode = 333
 
         ti(2) = MPI_WTIME()
         minwtdt = min(minwtdt,ti(2) - ti(1))
-        if(mod(time,tout).lt.dt) then
+        if(mod(time,tout)<dt) then
           if(ismaster) then
           write(6,*) 'Maximum divergence = ', dmax
           write(6,*)'ntime - time - vmax(1) - vmax(2) - vmax(3)  -&
@@ -241,38 +241,38 @@
           minwtdt = huge(0.0d0)
         endif
 
-       if( (ti(2) - tin(1)) .gt. walltimemax) errorcode = 334
+       if( (ti(2) - tin(1)) > walltimemax) errorcode = 334
 
-       if( ntime .eq. ntst ) errorcode = 555 
+       if( ntime == ntst ) errorcode = 555 
 
       call MpiBcastInt(errorcode)
 
 !EP   Conditional exits
-      if(errorcode.ne.0) then
+      if(errorcode/=0) then
 
 !EP    dt too small
-        if(errorcode.eq.166) call QuitRoutine(tin,.false.,errorcode)
+        if(errorcode==166) call QuitRoutine(tin,.false.,errorcode)
 
 !EP   cfl too high    
-        if(errorcode.eq.165) call QuitRoutine(tin,.false.,errorcode)
+        if(errorcode==165) call QuitRoutine(tin,.false.,errorcode)
       
 !EP   velocities diverged
-        if(errorcode.eq.266) call QuitRoutine(tin,.false.,errorcode)
+        if(errorcode==266) call QuitRoutine(tin,.false.,errorcode)
           
 !EP   mass not conserved
-        if(errorcode.eq.169) call QuitRoutine(tin,.false.,errorcode)
+        if(errorcode==169) call QuitRoutine(tin,.false.,errorcode)
 
 !EP   Physical time exceeded tmax, no error; normal quit
-        if(errorcode.eq.333) call QuitRoutine(tin,.true.,errorcode)
+        if(errorcode==333) call QuitRoutine(tin,.true.,errorcode)
 
 !EP   walltime exceeded walltimemax, no error; normal quit
-        if(errorcode.eq.334) call QuitRoutine(tin,.true.,errorcode)
+        if(errorcode==334) call QuitRoutine(tin,.true.,errorcode)
 
 !RS   FFT input not correct
-        if(errorcode.eq.444) call QuitRoutine(tin,.false.,errorcode)
+        if(errorcode==444) call QuitRoutine(tin,.false.,errorcode)
 
 !RS   maximum number of timesteps reached, no error; normal quit
-        if(errorcode.eq.555) call QuitRoutine(tin,.true.,errorcode)
+        if(errorcode==555) call QuitRoutine(tin,.true.,errorcode)
 
         errorcode = 100 !EP already finalized
       

@@ -17,7 +17,7 @@
       integer :: jc,kc,kp,jp,ic,ip
       real    :: dqcap
         
-      if(nrank.eq.0) write(*,*) "I   J   K   RANK"
+      if(nrank==0) write(*,*) "I   J   K   RANK"
       do ic=xstart(3),xend(3)
         ip=ic+1
         do jc=xstart(2),xend(2)
@@ -27,7 +27,7 @@
               dqcap= (vz(kc,jc,ip)-vz(kc,jc,ic))*dz &
      &              +(vy(kc,jp,ic)-vy(kc,jc,ic))*dy &
      &              +(vx(kp,jc,ic)-vx(kc,jc,ic))*udx3m(kc)
-              if (abs(dqcap).gt.resid) then
+              if (abs(dqcap)>resid) then
                 write(*,*) ic,jc,kc,nrank
             write(*,*) "vz",(vz(kc,jc,ip)-vz(kc,jc,ic))*dz
        write(*,*) "vy",(vy(kc,jp,ic)-vy(kc,jc,ic))*dy
