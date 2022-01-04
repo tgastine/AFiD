@@ -18,20 +18,19 @@
       real :: xxx,yyy,eps,rdm
 
       !eps=0.01d0
-      eps = 10.0d0
+      eps = 1.0d0
       do i=xstart(3),xend(3)
       do j=xstart(2),xend(2)
       do k=1,nxm
            vz(k,j,i)=0.0d0
            yyy=xm(k) 
            xxx=yc(j)            
-           vy(k,j,i)=(2.0d0*yyy-6.0d0*yyy**2+4.0d0*yyy**3) &
-     &                  *sin(3*xxx)*eps
+           vy(k,j,i)=(2.0d0*yyy-6.0d0*yyy**2+4.0d0*yyy**3)*sin(3*xxx)*eps
+           vz(k,j,i)=yyy*(1.0d0-yyy)**3*cos(4.3*zm(i))*eps
 
            yyy=xc(k)          
            xxx=ym(j)
            vx(k,j,i)=-yyy**2*(1.0d0-yyy)**2*cos(3.1*xxx)*eps
-           vz(k,j,i)=cos(2.7*xxx)*cos(4.3*zc(i))*eps
 
          enddo
         enddo
