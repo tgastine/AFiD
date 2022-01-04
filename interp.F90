@@ -98,6 +98,13 @@
              xnew=tmnew
              ynew=rmnew
              znew=zmnew
+          case (5)
+             xold=tmold
+             yold=rmold
+             zold=zmold
+             xnew=tmnew
+             ynew=rmnew
+             znew=zmnew
       end select
 
 !EP   Extrapolate halo
