@@ -10,6 +10,7 @@ program AFiD
       use stat_arrays, only: nstatsamples
       use SlabDump, only: SlabDumper, InitializeSlabDump
       use checkpoints, only: ReadFlowField
+      use grid, only: WriteGridInfo, CreateGrid
 !$    use omp_lib
 
       implicit none
@@ -84,9 +85,9 @@ program AFiD
 
       call InitVariables
 
-      call CreateGrid
+      call CreateGrid()
 
-      call WriteGridInfo
+      call WriteGridInfo()
 
       if (dumpslabs) call InitializeSlabDump()
 
