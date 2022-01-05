@@ -10,7 +10,7 @@ CheckDivergence.F90           UpdateVel.F90        MpiAuxRoutines.F90         So
 CorrectPressure.F90           StatReadReduceWrite.F90 \
 CorrectVelocity.F90           param.F90                  StatRoutines.F90 \
 CreateGrid.F90                QuitRoutine.F90      UpdateComp.F90      TimeMarcher.F90 ExplicitTerms.F90\
-CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90  factorize.F90       checkpoints.F90 HdfReadContinua.F90
+CreateInitialConditions.F90   GlobalQuantities.F90     InitTimeMarchScheme.F90  ReadInputFile.F90  factorize.F90       checkpoints.F90
 
 afid_LDADD = $(FFTW3_LIBS) $(LAPACK_LIBS) $(BLAS_LIBS) $(HDF5_LIBS)
 
@@ -63,7 +63,6 @@ CorrectVelocity.o: CorrectVelocity.F90  param.o
 MpiAuxRoutines.o: MpiAuxRoutines.F90  param.o
 StatRoutines.o: StatRoutines.F90  param.o
 StatReadReduceWrite.o: StatReadReduceWrite.F90  param.o
-HdfReadContinua.o: HdfReadContinua.F90  param.o
 transpose_y_to_x.o: transpose_y_to_x.F90  
 UpdateTemp.o: UpdateTemp.F90  param.o
 UpdateComp.o: UpdateComp.F90  param.o
