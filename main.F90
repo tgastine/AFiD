@@ -1,4 +1,6 @@
-      program AFiD
+program AFiD
+
+      use iso_fortran_env, only: cp => real64
       use mpih
       use param
       use local_arrays, only: vx,vy,vz,temp,pr,xi
@@ -6,12 +8,14 @@
       use decomp_2d
       use decomp_2d_fft
       use stat_arrays, only: nstatsamples
+      use SlabDump, only: SlabDumper, InitializeSlabDump
 !$    use omp_lib
+
       implicit none
+
       integer :: errorcode, nthreads
-      real    :: instCFL,dmax
-      real    :: ti(2), tin(3), minwtdt
-      real :: ts
+      real(cp):: instCFL,dmax, ts
+      real(cp) :: ti(2), tin(3), minwtdt
       integer :: prow=0,pcol=0
       integer :: lfactor,lfactor2
       character(100) :: arg
@@ -29,8 +33,7 @@
         read(arg,'(i10)') pcol
       endif
 
-      call decomp_2d_init(nxm,nym,nzm,prow,pcol, &
-     & (/ .false.,.true.,.true. /))
+      call decomp_2d_init(nxm,nym,nzm,prow,pcol,(/ .false.,.true.,.true. /))
 
       ts=MPI_WTIME()
       tin(1) = MPI_WTIME()
@@ -84,7 +87,7 @@
 
       call WriteGridInfo
 
-      if (dumpslabs) call InitializeSlabDump
+      if (dumpslabs) call InitializeSlabDump()
 
 !m===================================                                                      
 !m===================================
@@ -93,7 +96,7 @@
       write(6,754)nx,ny,nz                                              
   754 format(/,5x,'grid resolution: ',' nx= ',i5,' ny= ',i5, &
       ' nz= ',i5/)                       
-      write(6,755) 1.d0/dx,1.d0/dy,1.d0/dz,dt,ntst                  
+      write(6,755) 1.0_cp/dx,1.0_cp/dy,1.0_cp/dz,dt,ntst                  
   755 format(/,2x,' dx=',e10.3,' dy=',e10.3,' dz=',e10.3,' dt=' &
       ,e10.3,' ntst=',i7,/)
       endif
@@ -101,7 +104,7 @@
 !m===================================
 !m===================================     
       
-      time=0.d0
+      time=0.0_cp
       if(statcal) nstatsamples = 0
 
       call InitPressureSolver
@@ -119,8 +122,8 @@
         if(ismaster) write(6,*) 'Creating initial condition'
 
         ntime=0                                                         
-        time=0.d0
-        instCFL=0.d0
+        time=0.0_cp
+        instCFL=0.0_cp
         
         call CreateInitialConditions
 
@@ -155,7 +158,7 @@
                                                                         
 !  ********* starts the time dependent calculation ***
       errorcode = 0 !EP set errocode to 0 (OK)
-      minwtdt = huge(0.0d0) !EP initialize minimum time step walltime
+      minwtdt = huge(0.0_cp) !EP initialize minimum time step walltime
 
       ! Check input for efficient FFT
       ! factorize input FFT directions. The largest factor should
@@ -176,7 +179,7 @@
 
         if(variabletstep) then
           if(ntime>1) then
-            if(instCFL<1.0d-14) then !EP prevent fp-overflow
+            if(instCFL<1.0e-14_cp) then !EP prevent fp-overflow
               dt=dtmax
             else
               dt=limitCFL/instCFL
@@ -214,7 +217,7 @@
             if(time>tsta) then
 
              if (statcal)  call CalcStats
-             if (dumpslabs) call SlabDumper
+             if (dumpslabs) call SlabDumper()
              if (disscal.and.statcal) call CalcDissipationNu
 
             endif
@@ -238,7 +241,7 @@
           write(6,'(a,f8.3,a)') 'Minimum Iteration Time = ', minwtdt, &
                   ' sec.'
           endif
-          minwtdt = huge(0.0d0)
+          minwtdt = huge(0.0_cp)
         endif
 
        if( (ti(2) - tin(1)) > walltimemax) errorcode = 334
@@ -284,5 +287,4 @@
 
       call QuitRoutine(tin,.true.,errorcode)
       
-      end                                                               
-
+end program AFiD

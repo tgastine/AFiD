@@ -1,3 +1,20 @@
+module SlabDump
+
+   use iso_fortran_env, only: cp => real64
+   use param
+   use local_arrays, only: temp,vx,vy,vz,xi
+   use stat3_param
+   use decomp_2d, only: xstart,xend
+   use mpih
+   use hdf5
+
+   implicit none
+
+   private
+
+   public :: SlabDumper, InitializeSlabDump
+
+contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                         ! 
 !    FILE: SlabDumper.F90                                 !
@@ -9,15 +26,10 @@
 !                                                         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine SlabDumper
-      use param
-      use local_arrays, only: temp,vx,vy,vz,xi
-      use stat3_param
-      use decomp_2d, only: xstart,xend
-      implicit none
+   subroutine SlabDumper
+
       integer :: i,j,m
-      real,dimension(xstart(2):xend(2),xstart(3):xend(3)) :: &
-     &      vxcc,vycc,vzcc,tempcc,xicc
+      real(cp),dimension(xstart(2):xend(2),xstart(3):xend(3)) :: vxcc,vycc,vzcc,tempcc,xicc
       character*70 :: filnam
       character*1 :: charm
 
@@ -29,7 +41,7 @@
 !$OMP   PRIVATE(i,j)
         do i=xstart(3),xend(3)
          do j=xstart(2),xend(2)
-           vxcc(j,i) = (vx(kslab(m),j,i)+vx(kslab(m)+1,j,i))*0.5
+           vxcc(j,i) = (vx(kslab(m),j,i)+vx(kslab(m)+1,j,i))*0.5_cp
            vycc(j,i) = vy(kslab(m),j,i)
            vzcc(j,i) = vz(kslab(m),j,i)
            tempcc(j,i) = temp(kslab(m),j,i)
@@ -51,17 +63,11 @@
       call DumpSingleSlab(xicc,filnam)
       enddo
 
-      return
-      end subroutine SlabDumper
-
+   end subroutine SlabDumper
 !===========================================================================
-
-      subroutine InitializeSlabDump
-      use param
-      use stat3_param
-      implicit none
+   subroutine InitializeSlabDump
       integer :: i,k,j
-      real :: xmloc
+      real(cp) :: xmloc
       character(len=4) :: dummy
 
 !EP   Read from stst3.in
@@ -95,25 +101,15 @@
       close(23)
       endif
 
-      return
-      end subroutine InitializeSlabDump
-
+   end subroutine InitializeSlabDump
 !==================================================================
-      
-      subroutine DumpSingleSlab(var,filnam)
-      USE param
-      use mpih
-      USE hdf5
-      use decomp_2d, only: xstart,xend
-      IMPLICIT none
+   subroutine DumpSingleSlab(var,filnam)
 
-      real, intent(in) :: var(xstart(2):xend(2) &
-     &                  ,xstart(3):xend(3))
+      real(cp),     intent(in) :: var(xstart(2):xend(2),xstart(3):xend(3))
+      character*70, intent(in) :: filnam
 
-      real :: tprfi
+      real(cp) :: tprfi
       integer :: itime
-
-      character*70,intent(in) :: filnam
       character*70 :: namfile,dsetname
       character*8 :: ipfi
 
@@ -132,5 +128,6 @@
        call HdfSerialWriteRealScalar(dsetname,namfile,time)
       endif
 
-      return                                                          
-      end subroutine DumpSingleSlab
+   end subroutine DumpSingleSlab
+
+end module SlabDump
