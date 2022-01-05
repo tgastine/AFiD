@@ -9,6 +9,7 @@ program AFiD
       use decomp_2d_fft
       use stat_arrays, only: nstatsamples
       use SlabDump, only: SlabDumper, InitializeSlabDump
+      use checkpoints, only: ReadFlowField
 !$    use omp_lib
 
       implicit none
@@ -115,7 +116,7 @@ program AFiD
 
         if(ismaster) write(6,*) 'Reading initial condition from file'
 
-        call ReadFlowField
+        call ReadFlowField()
 
       else
 

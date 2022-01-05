@@ -13,6 +13,7 @@
       use param
       use decomp_2d, only: nrank, decomp_2d_finalize
       use decomp_2d_fft
+      use checkpoints, only: WriteFlowField
       implicit none
       logical, intent(in) :: normalexit
       integer :: errorcode
@@ -28,7 +29,7 @@
       if(normalexit) then
         if(nrank==0) write(6,'(a,f10.2,a)') 'Total Iteration Time = ',tin(3) -tin(2),' sec.'
         if (statcal) call WriteStats
-        call WriteFlowField
+        call WriteFlowField()
       else
         call MPI_Abort(MPI_COMM_WORLD,1)
       endif
